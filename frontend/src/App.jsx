@@ -8,6 +8,9 @@ import PaymentPage from "./pages/PaymentPage";
 import Confirmation from "./pages/Confirmation";
 import FaQues from "./pages/faq";
 import ContactUs from "./pages/Contact";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import MyTickets from "./pages/MyTickets";
 import Footer from "./components/Footer";
 // import Footer from "./components/Footer";
 
@@ -25,6 +28,9 @@ const App = () => {
           <Route path="/payment/:id" element={<PaymentPage/> }/>
           <Route path="/faq" element={<FaQues/> }/>
           <Route path="/confirmation" element={<Confirmation/> }/>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/my-tickets" element={<MyTickets />} />
         </Routes>
         <Footer/>
       </div>

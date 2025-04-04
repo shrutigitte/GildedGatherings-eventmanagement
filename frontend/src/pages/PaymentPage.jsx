@@ -39,11 +39,11 @@ const PaymentPage = () => {
       setTimeout(() => {
         navigate("/confirmation", {
           state: {
-            name: event.name,
+            email: formData.email,
+            eventName: event.name,
             venue: event.venue,
             date: event.date,
             numberOfTickets,
-            email: formData.email,
             userName: formData.name,
           },
         });
