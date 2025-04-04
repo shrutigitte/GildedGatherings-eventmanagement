@@ -29,7 +29,7 @@ const PaymentPage = () => {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:5001/api/payment/confirm", {
+      await axios.post("${import.meta.env.VITE_BACKEND_URL}/api/payment/confirm", {
         email: formData.email,
         eventName: event.name,
         numberOfTickets,
