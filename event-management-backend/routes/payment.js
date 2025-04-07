@@ -6,26 +6,42 @@ const generateTicketPDF = require("../utils/generateTicketPDF");
 const Ticket = require("../models/Ticket");
 const router = express.Router();
 const authenticate = require("../middleware/authMiddleware");
+const Event = require("../models/Event"); // adjust the path if needed
 
 
 router.post("/confirm", async (req, res) => {
+  
   const { email, eventName, numberOfTickets, eventDate } = req.body;
+
+// 🧠 Fetch event image from MongoDB
+const event = await Event.findOne({ name: eventName });
+
+if (!event) {
+  return res.status(404).json({ message: "Event not found" });
+}
+
+const eventImage = events.image; // ✅ this is what we need
+
 
   try {
     const ticketId = Math.floor(100000 + Math.random() * 900000).toString();
 
-    const qrData = `Ticket ID: ${ticketId}\nEvent: ${eventName}\nTickets: ${numberOfTickets}\nEmail: ${email}`;
-    const qrImageDataUrl = await QRCode.toDataURL(qrData);
+    const ticketUrl = `https://gildedgatherings.vercel.app/`;
+    const qrImageDataUrl = await QRCode.toDataURL(ticketUrl);
     const qrBuffer = Buffer.from(qrImageDataUrl.split(",")[1], "base64");
 
-    const pdfBuffer = await generateTicketPDF({
-      email,
-      eventName,
-      numberOfTickets,
-      eventDate,
-      ticketId,
-      qrBuffer
-    });
+    const pdfBuffer = await generateTicketPDF(
+      {
+        email,
+        eventName,
+        numberOfTickets,
+        eventDate,
+        ticketId,
+        image: eventImage,
+      },
+      qrImageDataUrl 
+    );
+    
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -45,7 +61,7 @@ router.post("/confirm", async (req, res) => {
             <h2 style="color: #e30b5d; font-size: 32px; font-family: sans-serif;">
               🎟️Your Ticket for <span style="color: #d3af47;">${eventName}</span> is Confirmed!
             </h2>
-            <p style="color: #fff; font-size: 16px; font-family: sans-serif; line-height: 1.6;">
+            <p style="color: white; font-size: 16px; font-family: sans-serif; line-height: 1.6;">
               Thank you for booking <strong>${numberOfTickets}</strong> ticket(s).<br />
               Your PDF ticket is attached below, and your QR code is shown here:
             </p>
@@ -79,11 +95,10 @@ router.post("/confirm", async (req, res) => {
   }
 });
 
-
 router.get("/ticket", async (req, res) => {
   const { email, eventName } = req.query;
 
-  console.log("Searching ticket for:", email, eventName); // <-- Add this
+  console.log("Searching ticket for:", email, eventName);
 
   const ticket = await Ticket.findOne({ email, eventName });
 
@@ -91,13 +106,11 @@ router.get("/ticket", async (req, res) => {
     return res.status(404).json({ message: "Ticket not found" });
   }
 
-  const qrData = `Ticket ID: ${ticket.ticketId}\nEvent: ${ticket.eventName}\nTickets: ${ticket.numberOfTickets}\nEmail: ${ticket.email}`;
-  const qrBase64 = await QRCode.toDataURL(qrData);
+  const ticketUrl = `https://gildedgatherings.vercel.app/`;
+  const qrBase64 = await QRCode.toDataURL(ticketUrl);
 
   res.json({ ticket: { ...ticket.toObject(), qrCodeBase64: qrBase64.split(",")[1] } });
 });
-
-//this my is the my tickets one
 
 router.get("/my", authenticate, async (req, res) => {
   try {
@@ -110,8 +123,33 @@ router.get("/my", authenticate, async (req, res) => {
   }
 });
 
+//download pdf button
+router.get("/pdf/:ticketId", async (req, res) => {
+  const { ticketId } = req.params;
 
+  try {
+    const ticket = await Ticket.findOne({ ticketId });
 
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    const ticketUrl = `https://gildedgatherings.vercel.app/`;
+    const qrImageDataUrl = await QRCode.toDataURL(ticketUrl);
+
+    const pdfBuffer = await generateTicketPDF(ticket, qrImageDataUrl);
+
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename=ticket-${ticket.ticketId}.pdf`,
+    });
+
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error("PDF download error:", err);
+    res.status(500).send("Error generating PDF ticket");
+  }
+});
 
 
 module.exports = router;

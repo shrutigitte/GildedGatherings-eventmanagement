@@ -4,6 +4,9 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 // const passport = require("passport");
 // require("./config/passport"); 
+const eventRoutes = require("./routes/events");
+
+
 
 
 dotenv.config();
@@ -19,6 +22,7 @@ app.use("/api", require("./routes/contact")); // ✅ Contact
 app.use("/api/auth", require("./routes/auth")); // ✅ authorization /login/signup
 app.use("/api/subscribe", require("./routes/subscribe")); //subscription of newsletter
 app.use("/api/payment", require("./routes/payment")); //payment
+app.use("/api/events", eventRoutes); //eventgrid
 
 mongoose
   .connect(process.env.MONGO_URI)

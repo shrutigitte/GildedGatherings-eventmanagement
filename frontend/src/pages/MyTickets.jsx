@@ -25,6 +25,22 @@ const MyTickets = () => {
       .then(res => setTickets(res.data))
       .catch(err => console.error("Failed to fetch tickets", err));
   }, [navigate]);
+  const handleResend = async (ticket) => {
+    try {
+      const res = await axios.post("http://localhost:5001/api/payment/confirm", {
+        email: ticket.email,
+        eventName: ticket.eventName,
+        eventDate: ticket.eventDate,
+        numberOfTickets: ticket.numberOfTickets,
+      });
+  
+      alert("✅ Ticket email resent successfully!");
+    } catch (err) {
+      console.error("Resend email failed:", err);
+      alert("❌ Failed to resend ticket email.");
+    }
+  };
+  
 
   return (
     <div className="min-h-screen p-8 bg-black text-white">
@@ -40,9 +56,24 @@ const MyTickets = () => {
                 <h3 className="text-lg text-[#d3af47]">{ticket.eventName}</h3>
                 <p>📅 {ticket.eventDate}</p>
                 <p>🎟 Ticket ID: {ticket.ticketId}</p>
+
+                <div className="mt-3 flex flex-wrap gap-3">
+  
+                  <a href={`http://localhost:5001/api/payment/pdf/${ticket.ticketId}`} target="_blank" rel="noopener noreferrer"
+                    className="px-4 py-2 bg-[#d3af47] text-black rounded-md hover:bg-[#b08d2b] text-sm">
+                    Download PDF Ticket
+                  </a>
+
+                  <button onClick={() => handleResend(ticket)} className="px-4 py-2 bg-[#e30b5d] text-white rounded-md hover:bg-[#c71a47] text-sm">
+                    Resend Email
+                  </button>
+                </div>
+
               </li>
+              
             ))}
           </ul>
+          
         )}
       </div>
     </div>
