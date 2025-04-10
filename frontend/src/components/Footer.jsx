@@ -157,7 +157,7 @@ const Footer = () => {
             <ul className="mt-3 space-y-2">
               <li><a href="#" className="text-gray-800 hover:underline">Pricing</a></li>
               <li><a href="#" className="text-black hover:underline">Changelog</a></li>
-              <li><a href="#" className="text-black hover:underline">Docs</a></li>
+              <li><a href="https://gildedgatherings.tawk.help" target="_blank" className="text-black hover:underline"> Help Docs <span className="ml-1 bg-[#e30b5d] text-white text-xs py-0.5 px-1.5 rounded">Every Help you need</span></a></li>
             </ul>
           </div>
 
