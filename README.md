@@ -36,26 +36,7 @@ npm install
 
 ### .env format 
 
-PORT=5001
-
-MONGODB_URI=your_mongodb_connection_string
-
-EMAIL_USER=your_gmail_address
-EMAIL_PASS=your_app_specific_password (GENERATE IT FROM GOOGLE)
-
-
-OWNER_EMAIL=ADMIN_EMAIL (for contact forms and new event addition)
-
-GOOGLE_CLIENT_ID=for google authorization
-
-GOOGLE_CLIENT_SECRET=google_secret_id 
-
-//for hosting images 
-CLOUD_NAME=CLOUDINARY_CLOUDNAME
-CLOUD_API_KEY=CLOUDINARY_API_KEY
-CLOUD_API_SECRET=CLOUDINARY_SECRET_CODE
-JWT_SECRET=your_jwt_secret
-
+.env file is already given add you own keys and run the backend.
 
 
 ## FRONTEND 
@@ -83,6 +64,8 @@ This is the frontend for **Gilded Gatherings**, an event management platform whe
 
 - React.js (with React Router)
 - Vite
+- NodeJS 
+- MongoDB 
 - Axios for API calls
 - Tailwind CSS for styling
 - JWT Auth (via backend)
