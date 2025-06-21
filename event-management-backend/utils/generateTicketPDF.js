@@ -1,141 +1,10 @@
 
-// const PDFDocument = require("pdfkit");
-
-// const generateTicketPDF = (ticket, qrImageDataURL) => {
-//   return new Promise((resolve, reject) => {
-//     try {
-//       const doc = new PDFDocument({
-//         size: "A4",
-//         margin: 0,
-//       });
-
-//       const buffers = [];
-
-//       doc.on("data", buffers.push.bind(buffers));
-//       doc.on("end", () => {
-//         const pdfData = Buffer.concat(buffers);
-//         resolve(pdfData);
-//       });
-
-//       // Full black background
-//       doc.rect(0, 0, doc.page.width, doc.page.height).fill("#000000");
-
-//       const contentX = 50;
-//       let currentY = 50;
-
-//       // Title - Gilded Gatherings
-//       doc
-//         .fillColor("#d3af47")
-//         .fontSize(26)
-//         .text("Gilded Gatherings", 0, currentY, {
-//           align: "center",
-//           width: doc.page.width,
-//         });
-
-//       currentY += 30; // Small spacing
-
-//       // Horizontal line
-//       doc
-//         .moveTo(contentX, currentY)
-//         .lineTo(doc.page.width - contentX, currentY)
-//         .strokeColor("#d3af47")
-//         .lineWidth(1)
-//         .stroke();
-
-//       currentY += 20; // Small gap after line
-      
-
-//       // Ticket Info
-//       doc.fillColor("#e30b5d").fontSize(16).text(`Event: ${ticket.eventName}`, contentX, currentY);
-//       currentY += 26;
-
-//       doc.fillColor("#ffffff").fontSize(14).text(`Email: ${ticket.email}`, contentX, currentY);
-//       currentY += 22;
-
-//       doc.text(`Number of Tickets: ${ticket.numberOfTickets}`, contentX, currentY);
-//       currentY += 22;
-
-//       doc.text(`Date: ${ticket.eventDate || "Not Provided"}`, contentX, currentY);
-//       currentY += 22;
-
-//       doc.text(`Ticket ID: ${ticket.ticketId}`, contentX, currentY);
-//       currentY += 40;
-
-//       // QR Code
-//       if (qrImageDataURL && qrImageDataURL.startsWith("data:image")) {
-//         const base64Data = qrImageDataURL.split(",")[1];
-//         const qrBuffer = Buffer.from(base64Data, "base64");
-
-//         // Optional black box behind QR
-//         doc.rect(doc.page.width - 180, 130, 120, 120).fill("#000000");
-
-//         doc.image(qrBuffer, doc.page.width - 180, 130, { width: 120 });
-//       } else {
-//         doc.fillColor("red").fontSize(12).text("⚠️ QR Code not available", doc.page.width - 200, 160);
-//       }
-
-//       // Footer section padding
-//       const footerHeight = 280;
-//       const bottomPadding = 30;
-//       const footerY = doc.page.height - footerHeight - bottomPadding;
-
-//       // Black footer bg
-//       doc
-//         .fillColor("#000000")
-//         .rect(0, footerY, doc.page.width, footerHeight)
-//         .fill();
-
-//       // Instructions Title
-//       doc
-//         .fillColor("#d3af47")
-//         .fontSize(16)
-//         .text("Instructions", contentX, footerY + 20, {
-//           width: doc.page.width - contentX * 2,
-//           align: "left",
-//         });
-
-//       // Actual instructions text
-//       const instructions = `1. Please arrive at least 30 minutes before the event.
-
-// 2. Security checks, ticket verification, and seat finding require time.
-
-// 3. Prohibited: outside food/drinks, weapons, illegal substances, large bags.
-
-// 4. Show your ticket at entry (printed or digital).
-
-// 5. Respect event staff and follow all instructions.
-
-// 6. Flash photography may be prohibited. Pro gear needs permission.
-
-// 7. No re-entry after exiting. Tickets are non-transferable and non-refundable.`;
-
-//       doc
-//         .fillColor("#FFFFFF")
-//         .fontSize(10)
-//         .text(instructions, contentX, footerY + 50, {
-//           width: doc.page.width - contentX * 2,
-//           align: "left",
-//           lineGap: 4,
-//         });
-
-//       doc.end();
-//     } catch (err) {
-//       reject(err);
-//     }
-//   });
-// };
-
-// module.exports = generateTicketPDF;
 const axios = require("axios");
 const PDFDocument = require("pdfkit");
 
 const generateTicketPDF = async (ticket, qrImageDataURL) => {
   try {
-    const doc = new PDFDocument({
-      size: "A4",
-      margin: 0,
-    });
-
+    const doc = new PDFDocument({ size: "A4", margin: 0 });
     const buffers = [];
 
     doc.on("data", buffers.push.bind(buffers));
@@ -146,98 +15,81 @@ const generateTicketPDF = async (ticket, qrImageDataURL) => {
     // Full black background
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#000000");
 
-    const contentX = 50;
-    let currentY = 50;
+    let currentY = 40;
 
     // Title
     doc
       .fillColor("#d3af47")
-      .fontSize(26)
+      .fontSize(28)
       .text("Gilded Gatherings", 0, currentY, {
         align: "center",
         width: doc.page.width,
       });
 
-    currentY += 30;
+    currentY += 40;
 
-    // Line
-    doc
-      .moveTo(contentX, currentY)
-      .lineTo(doc.page.width - contentX, currentY)
-      .strokeColor("#d3af47")
-      .lineWidth(1)
-      .stroke();
-
-    currentY += 20;
-
-    // ✅ Load image
+    // Load and draw the event image
     if (ticket.image) {
       try {
         const imageRes = await axios.get(ticket.image, { responseType: "arraybuffer" });
         const imageBuffer = Buffer.from(imageRes.data, "binary");
 
-        doc.image(imageBuffer, contentX, currentY, {
-          width: doc.page.width - contentX * 2,
+        doc.image(imageBuffer, 50, currentY, {
+          width: doc.page.width - 100,
+          height: 180,
+          align: "center",
+          valign: "center",
+          fit: [doc.page.width - 100, 180],
         });
 
-        currentY += 140;
+        currentY += 200; // Shift down after image
       } catch (err) {
-        console.error("⚠️ Failed to load event image:", err.message);
+        console.error("Failed to load event image:", err.message);
         currentY += 20;
       }
     }
 
-    // Ticket info
-    doc.fillColor("#e30b5d").fontSize(16).text(`Event: ${ticket.eventName}`, contentX, currentY);
-    currentY += 26;
+    // Ticket details and QR side-by-side
+    const leftX = 50;
+    const rightX = doc.page.width / 2 + 30;
 
-    doc.fillColor("#ffffff").fontSize(14).text(`Email: ${ticket.email}`, contentX, currentY);
-    currentY += 22;
-
-    doc.text(`Number of Tickets: ${ticket.numberOfTickets}`, contentX, currentY);
-    currentY += 22;
-
-    doc.text(`Date: ${ticket.eventDate || "Not Provided"}`, contentX, currentY);
-    currentY += 22;
-
-    doc.text(`Ticket ID: ${ticket.ticketId}`, contentX, currentY);
-    currentY += 40;
+    // Ticket details
+    doc
+      .fillColor("#e30b5d").fontSize(16).text(`Event: ${ticket.eventName}`, leftX, currentY)
+      .fillColor("#ffffff").fontSize(14).text(`Email: ${ticket.email}`, leftX, currentY + 24)
+      .text(`Tickets: ${ticket.numberOfTickets}`, leftX, currentY + 48)
+      .text(`Date: ${ticket.eventDate || "Not Provided"}`, leftX, currentY + 72)
+      .text(`Ticket ID: ${ticket.ticketId}`, leftX, currentY + 96);
 
     // QR Code
     if (qrImageDataURL && qrImageDataURL.startsWith("data:image")) {
       const base64Data = qrImageDataURL.split(",")[1];
       const qrBuffer = Buffer.from(base64Data, "base64");
 
-      doc.image(qrBuffer, doc.page.width - 180, 130, { width: 120 });
+      doc.image(qrBuffer, rightX, currentY + 20, {
+        width: 120,
+        height: 120,
+      });
     } else {
-      doc.fillColor("red").fontSize(12).text("⚠️ QR Code not available", doc.page.width - 200, 160);
+      doc.fillColor("red").fontSize(12).text("QR Code Unavailable", rightX, currentY + 50);
     }
 
-    // Footer instructions
+    // Move down after details and QR
+    currentY += 160;
+
+    // Footer Instructions
     doc
       .fillColor("#d3af47")
       .fontSize(16)
-      .text("Instructions", contentX, currentY + 30);
+      .text("Instructions", leftX, currentY);
 
-    const instructions = `1. Please arrive at least 30 minutes before the event.
-
-2. Security checks, ticket verification, and seat finding require time.
-
-3. Prohibited: outside food/drinks, weapons, illegal substances, large bags.
-
-4. Show your ticket at entry (printed or digital).
-
-5. Respect event staff and follow all instructions.
-
-6. Flash photography may be prohibited. Pro gear needs permission.
-
-7. No re-entry after exiting. Tickets are non-transferable and non-refundable.`;
+    const instructions = `1. Arrive 30 minutes early for checks.\n2. Entry requires QR or printed ticket.\n3. Prohibited items: weapons, outside food, large bags.\n4. Respect staff instructions.\n5. No re-entry after exit.`;
 
     doc
       .fillColor("#FFFFFF")
       .fontSize(10)
-      .text(instructions, contentX, currentY + 60, {
-        width: doc.page.width - contentX * 2,
+      .text(instructions, leftX, currentY + 30, {
+        width: doc.page.width - 100,
         align: "left",
         lineGap: 4,
       });

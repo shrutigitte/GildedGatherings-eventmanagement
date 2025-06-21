@@ -213,7 +213,9 @@ const EventSectionGrid = () => {
               />
               <h3 className="text-xl mt-2">{event.name}</h3>
               <p className="text-pink-600">{new Date(event.date).toLocaleDateString()}</p>
-              <p className="mt-2">{event.description}</p>
+              <p className="mt-2">{event.description.split(' ').slice(0, 20).join(' ')}...</p>
+              
+
               <a
                 href={`/tickets/${event._id}`}
                 className="block mt-3 px-4 py-2 text-center bg-black hover:bg-[#d3af37] hover:text-black text-[#d3af37] font-semibold rounded-lg transition-all"

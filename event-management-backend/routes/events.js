@@ -25,25 +25,34 @@ router.get("/:id", async (req, res) => {
     }
   });
 
-router.post("/", async (req, res) => {
-    try {
-      const { name, date, description, image, popularity } = req.body;
-  
-      const newEvent = new Event({
-        name,
-        date,
-        description,
-        image,
-        popularity,
-      });
-  
-      const savedEvent = await newEvent.save();
-      res.status(201).json(savedEvent);
-    } catch (error) {
-      console.error("POST error:", error);
-      res.status(500).json({ error: "Failed to create event" });
-    }
+
+
+router.post('/api/events', async (req, res) => {
+  try {
+    console.log("Received body:",req.body );
+    const { name, date, description, image, venue, sponsors, testimonials, cancellationPolicy ,ticketPrice } = req.body;
+
+    const newEvent = new Event({
+      name,
+      date,
+      description,
+      image,
+      venue,
+      sponsors,
+      testimonials,
+      cancellationPolicy,
+      ticketPrice,
+    });
+
+    await newEvent.save();
+    res.status(201).json(newEvent);
+  } catch (error) {
+    console.error("Error creating event:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
 });
+
+
 
 router.post("/upload", upload.single("image"), async (req, res) => {
     try {

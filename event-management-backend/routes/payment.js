@@ -8,6 +8,33 @@ const router = express.Router();
 const authenticate = require("../middleware/authMiddleware");
 const Event = require("../models/Event"); // adjust the path if needed
 
+const Razorpay = require("razorpay");
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID, // 🔥 Your Razorpay Test Key ID
+  key_secret: process.env.RAZORPAY_KEY_SECRET, // 🔥 Your Razorpay Test Key Secret
+});
+
+router.post("/create-order", async (req, res) => {
+  try {
+    const { amount } = req.body; // amount in paise
+
+    const options = {
+      amount: amount, // amount in paise
+      currency: "INR",
+      receipt: "receipt_order_" + Math.random(),
+    };
+
+    const order = await razorpay.orders.create(options);
+
+    console.log("Order created:", order);
+
+    res.status(200).json({ orderId: order.id });
+  } catch (error) {
+    console.error("Create order error:", error);
+    res.status(500).json({ message: "Failed to create order" });
+  }
+});
 
 router.post("/confirm", async (req, res) => {
   
@@ -20,7 +47,7 @@ if (!event) {
   return res.status(404).json({ message: "Event not found" });
 }
 
-const eventImage = events.image; // ✅ this is what we need
+const eventImage = event.image;
 
 
   try {
@@ -94,6 +121,75 @@ const eventImage = events.image; // ✅ this is what we need
     res.status(500).json({ message: "Error generating ticket", error: error.message });
   }
 });
+
+
+
+router.delete("/cancel/:id", authenticate, async (req, res) => {
+  try {
+    const ticket = await Ticket.findById(req.params.id);
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    const event = await Event.findOne({ name: ticket.eventName });
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    // Calculate refund % based on cancellation timing
+    const eventDate = new Date(event.date);
+    const today = new Date();
+    const diffInDays = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
+
+    let refundPercentage = 0;
+    if (diffInDays >= 10) {
+      refundPercentage = 80;
+    } else if (diffInDays >= 5) {
+      refundPercentage = 50;
+    } else if (diffInDays >= 2) {
+      refundPercentage = 20;
+    } else {
+      refundPercentage = 0;
+    }
+
+    // Setup email transport
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: ticket.email,
+      subject: "Ticket Cancellation Confirmation - Gilded Gatherings",
+      html: `
+        <div style="padding: 30px; background-color: #000000; color: white; font-family: sans-serif;">
+          <h2 style="color: #e30b5d;">🎟️ Your Ticket Cancellation</h2>
+          <p>We are sorry to see you cancel your ticket for <strong style="color: #d3af47;">${ticket.eventName}</strong>.</p>
+          <p>Thank you for choosing Gilded Gatherings. We appreciate your support.</p>
+          <p><strong>Refund Policy:</strong> Based on our cancellation policy and the time of cancellation, you are eligible for a <span style="color: #d3af47;">${refundPercentage}% refund</span>.</p>
+          <p>If you have any queries, feel free to contact our support team.</p>
+          <p style="color: #d3af47;">– Team Gilded Gatherings</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    // Delete ticket from DB
+    await Ticket.findByIdAndDelete(req.params.id);
+
+    res.json({ message: "Ticket canceled successfully and email sent." });
+  } catch (error) {
+    console.error("Cancel ticket error:", error);
+    res.status(500).json({ message: "Failed to cancel ticket" });
+  }
+});
+
+
 
 router.get("/ticket", async (req, res) => {
   const { email, eventName } = req.query;
