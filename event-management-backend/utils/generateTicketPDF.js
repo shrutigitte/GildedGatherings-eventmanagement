@@ -42,7 +42,7 @@ const generateTicketPDF = async (ticket, qrImageDataURL) => {
           fit: [doc.page.width - 100, 180],
         });
 
-        currentY += 200; // Shift down after image
+        currentY += 200; 
       } catch (err) {
         console.error("Failed to load event image:", err.message);
         currentY += 20;

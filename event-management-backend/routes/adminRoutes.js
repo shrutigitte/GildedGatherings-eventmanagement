@@ -26,7 +26,7 @@ router.post("/login", (req, res) => {
   }
 });
 
-// ✅ Admin Fetch All Tickets (NO AUTHORIZATION REQUIRED FOR NOW)
+
 router.get("/tickets", async (req, res) => {
   try {
     const tickets = await Ticket.find().sort({ createdAt: -1 });
@@ -37,29 +37,17 @@ router.get("/tickets", async (req, res) => {
   }
 });
 
-// (Optional) ✅ Admin Dashboard Testing Endpoint (Safe to remove later)
+
 router.get("/dashboard", (req, res) => {
   res.json({ message: "Admin Dashboard Working!" });
 });
 
-// router.post("/create-event", async (req, res) => {
-//   const { name, date, venue, description, image } = req.body;
-
-//   try {
-//     const newEvent = new Event({ name, date, venue, description, image });
-//     await newEvent.save();
-//     res.status(201).json({ message: "Event created successfully" });
-//   } catch (err) {
-//     console.error("Event creation error:", err);
-//     res.status(500).json({ message: "Failed to create event" });
-//   }
-// });
 router.post('/create-event', async (req, res) => {
   try {
     
 
     const { name, date, venue, description, image, sponsors, testimonials, cancellationPolicy, ticketPrice } = req.body;
-    // console.log("Received body:", req.body); // Add this line
+    // console.log("Received body:", req.body); 
     const newEvent = new Event({
       name,
       date,
