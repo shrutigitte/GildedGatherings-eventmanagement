@@ -1,0 +1,9 @@
+[
+    { "id": 1, "name": "Music Concert","category":"Concerts","description":"Join the biggest rock music festival of the year!","popularity":7,"image":"../assets/Designer-2.png", "date": "2025-02-20", "type": "Upcoming" },
+    { "id": 2, "name": "Tech Conference","category":"Conferences","description":"Explore the latest trends in technology and innovation.","popularity":8,"image":"../assets/Designer-2.png", "date": "2025-03-05", "type": "Popular" },
+    { "id": 3, "name": "Art Exhibition","category":"Concerts","description":"Learn photography skills from professionals.","popularity":9,"image":"../assets/Designer-2.png", "date": "2025-01-15", "type": "Past" },
+    {"id": 1,"name": "Rock Fest 2024","date": "2024-09-20","category": "Concerts","popularity": 9,"image": "../assets/Designer-2.png","description": "Join the biggest rock music festival of the year!"},
+    {"id": 2,"name": "Tech Innovations Conference","date": "2024-10-05","category": "Conferences","popularity": 8,"image": "../assets/Designer-2.png","description": "Explore the latest trends in technology and innovation."},
+    {"id": 3,"name": "National Marathon","date": "2024-11-12","category": "Sports","popularity": 7,"image": "/images/marathon.jpg","description": "Compete in the annual national marathon."},
+    {"id": 4,"name": "Photography Workshop","date": "2024-12-01","category": "Workshops","popularity": 6,"image": "/images/photoworkshop.jpg","description": "Learn photography skills from professionals."}
+    ]
