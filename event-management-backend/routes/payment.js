@@ -152,7 +152,7 @@ router.delete("/cancel/:id", authenticate, async (req, res) => {
       refundPercentage = 0;
     }
 
-    // Setup email transport
+    //  email transport
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
