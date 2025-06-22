@@ -1,3 +1,4 @@
+//not in use anymore now the project takes data directly from backend in mongoDB
 [
     { "id": 1, "name": "Music Concert","category":"Concerts","description":"Join the biggest rock music festival of the year!","popularity":7,"image":"../assets/Designer-2.png", "date": "2025-02-20", "type": "Upcoming" },
     { "id": 2, "name": "Tech Conference","category":"Conferences","description":"Explore the latest trends in technology and innovation.","popularity":8,"image":"../assets/Designer-2.png", "date": "2025-03-05", "type": "Popular" },
