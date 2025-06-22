@@ -1,6 +1,7 @@
 ### 🎟️ Event Management Backend
 
 This is the backend for the **Gilded Gatherings** Event Management system. It supports event listings, ticket bookings, QR-based ticket generation, PDF downloads, and email confirmations.
+(Screenshots attached below)
 
 ---
 
@@ -89,6 +90,21 @@ npm run dev
 <img width="1241" alt="image" src="https://github.com/user-attachments/assets/506461f5-255b-4b5d-bdc8-13d8e7a92b37" />
 <img width="1504" alt="image" src="https://github.com/user-attachments/assets/ea767d64-0308-457a-a7cc-68af1384900e" />
 <img width="1215" alt="image" src="https://github.com/user-attachments/assets/8bf32082-aedc-4bcb-9da7-9045c8022236" />
+<img width="575" alt="image" src="https://github.com/user-attachments/assets/5a1428d4-7ade-4633-8b8c-2a5444c860b7" /> 
+(Real time chatting)
+<img width="576" alt="image" src="https://github.com/user-attachments/assets/332f8a77-983c-413f-958e-ee87d04aa0b4" />
+(Razorpay Payment Integration)
+<img width="577" alt="image" src="https://github.com/user-attachments/assets/cd6ae9c5-bf14-4bc0-9c01-efe481c1e36c" />
+(Help Website )
+<img width="576" alt="image" src="https://github.com/user-attachments/assets/82041bac-649e-4c45-82f5-9330fb705959" />
+(Admin Panel)
+<img width="579" alt="image" src="https://github.com/user-attachments/assets/1961d26c-5af3-4d7b-b3de-be28deef5ef7" />
+(Create New Event admin form)
+<img width="569" alt="image" src="https://github.com/user-attachments/assets/6625e18e-0cc0-4bd3-ab0d-76b401e1a697" />
+(Booking Confirmation)
+<img width="565" alt="image" src="https://github.com/user-attachments/assets/9441a613-8c64-4e3a-a90a-04286df31055" />
+(PDF Generated)
+
 
 
 
