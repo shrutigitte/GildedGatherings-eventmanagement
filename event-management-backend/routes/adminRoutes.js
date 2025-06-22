@@ -5,16 +5,16 @@ const Ticket = require("../models/Ticket");
 
 const router = express.Router();
 
-const Event = require("../models/Event"); // 👈 Import your Event model (make sure you have it!)
+const Event = require("../models/Event"); 
 
 
 
 
-// Dummy Admin Credentials
+// Dummy Admin Credentials abhi ke liye 
 const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "1234567890";
 
-// ✅ Admin Login Route
+// Admin Login Route
 router.post("/login", (req, res) => {
   const { username, password } = req.body;
 
