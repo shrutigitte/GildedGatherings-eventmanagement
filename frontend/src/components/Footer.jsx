@@ -79,7 +79,6 @@ const Footer = () => {
         <div className="mt-10 flex flex-col sm:flex-row justify-between items-center">
           <p className="text-[#e30b5d]">© 2025 Gilded Gatherings</p>
           <div className="flex gap-3 mt-3 sm:mt-0">
-            {/* Replace # with your actual social media links if needed */}
             {["facebook", "twitter", "instagram", "github"].map((platform, i) => (
               <a key={i} href="#" className="text-[#e30b5d] hover:scale-110 transition">
                 <i className={`fab fa-${platform} text-xl`}></i>
