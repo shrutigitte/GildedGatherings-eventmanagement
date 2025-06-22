@@ -6,18 +6,18 @@ const generateTicketPDF = require("../utils/generateTicketPDF");
 const Ticket = require("../models/Ticket");
 const router = express.Router();
 const authenticate = require("../middleware/authMiddleware");
-const Event = require("../models/Event"); // adjust the path if needed
+const Event = require("../models/Event"); 
 
 const Razorpay = require("razorpay");
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID, // 🔥 Your Razorpay Test Key ID
-  key_secret: process.env.RAZORPAY_KEY_SECRET, // 🔥 Your Razorpay Test Key Secret
+  key_id: process.env.RAZORPAY_KEY_ID, 
+  key_secret: process.env.RAZORPAY_KEY_SECRET, 
 });
 
 router.post("/create-order", async (req, res) => {
   try {
-    const { amount } = req.body; // amount in paise
+    const { amount } = req.body; // amount in paise kyunki razorpay will accept that way
 
     const options = {
       amount: amount, // amount in paise
@@ -40,7 +40,7 @@ router.post("/confirm", async (req, res) => {
   
   const { email, eventName, numberOfTickets, eventDate } = req.body;
 
-// 🧠 Fetch event image from MongoDB
+//  Fetch event image from MongoDB
 const event = await Event.findOne({ name: eventName });
 
 if (!event) {
